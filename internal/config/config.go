@@ -24,20 +24,20 @@ type HTTPServer struct {
 
 func MustLoad() *Config {
 	configPath := os.Getenv("CONFIG_PATH")
-
 	if configPath == "" {
 		log.Fatal("CONFIG_PATH is not set")
 	}
 
+	// check if file exists
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
-		log.Fatalf("config file %s not found", configPath)
+		log.Fatalf("config file does not exist: %s", configPath)
 	}
 
 	var cfg Config
 
 	if err := cleanenv.ReadConfig(configPath, &cfg); err != nil {
-		log.Fatalf("failed to load config: %v", err)
+		log.Fatalf("cannot read config: %s", err)
 	}
-	
+
 	return &cfg
 }
