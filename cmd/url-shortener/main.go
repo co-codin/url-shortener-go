@@ -1,10 +1,12 @@
 package main
 
 import (
-	"fmt"
-	"golang.org/x/exp/slog"
 	"os"
 	"url-shortener/internal/config"
+	"url-shortener/internal/lib/logger/sl"
+	"url-shortener/internal/storage/sqlite"
+
+	"golang.org/x/exp/slog"
 )
 
 const (
@@ -24,6 +26,15 @@ func main() {
 		slog.String("version", "123"),
 	)
 	log.Debug("debug messages are enabled")
+
+	storage, err := sqlite.New(cfg.StoragePath)
+
+	if err != nil {
+		log.Error("failed to init storage", sl.Err(err))
+		os.Exit(1)
+	}
+
+	_ = storage
 }
 
 func setupLogger(env string) *slog.Logger {
